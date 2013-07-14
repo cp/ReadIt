@@ -1,10 +1,13 @@
-<ul>
-<%= 'You have no unread posts.' if @posts[0].nil? %>
-<% @posts.each do |post| %>
-  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>">Mark as Read</a></li>
+<% if @posts[0] %>
+	<ul>
+	<% @posts.each do |post| %>
+	  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>">Mark as Read</a></li>
+	<% end %>
+	</ul>
+<a href="/read/all">MARK ALL AS READ!!</a><br>
+<% else %>
+<p>You have no unread posts</p>
 <% end %>
-</ul>
 
 <br><br>
-<% unless @posts[0].nil? %><a href="/read/all">MARK ALL AS READ!!</a><br><% end %>
 <a href="/logout">Log out</a>
