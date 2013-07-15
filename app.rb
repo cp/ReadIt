@@ -1,4 +1,4 @@
-%w(sinatra httparty json).each { |x| require x }
+%w(sinatra feedbin httparty json).each { |x| require x }
 
 enable :sessions
 
@@ -11,14 +11,11 @@ get '/' do
 end
 
 get '/read/all' do
-  auth = { username: session[:email], password: session[:password] }
-  posts = HTTParty.get("https://api.feedbin.me/v2/entries.json?read=false", basic_auth: auth)
+  fb = Feedbin::API.new(session[:email], session[:password])
+  posts = HTTParty.get("https://api.feedbin.me/v2/entries.json?read=false", basic_auth: { username: session[:email], password: session[:password] })
   to_delete = posts.map { |post| post["id"]}
-  HTTParty.post("https://api.feedbin.me/v2/unread_entries/delete.json", 
-    body: { 'unread_entries' => to_delete }.to_json, 
-    headers: { 'Content-Type' => 'application/json' },
-    basic_auth: auth)
-  if posts.code == 200
+  response = fb.mark_as_read(to_delete)
+  if response.code == 200
     redirect '/'
   else
     "#{posts.code}! Please try again."
@@ -26,13 +23,9 @@ get '/read/all' do
 end
 
 get '/read/:id' do
-  redirect '/login' if session[:email].nil?
-  auth = { username: session[:email], password: session[:password] }
-  posts = HTTParty.post("https://api.feedbin.me/v2/unread_entries/delete.json", 
-    body: { 'unread_entries' => params[:id] }.to_json, 
-    headers: { 'Content-Type' => 'application/json' },
-    basic_auth: auth)
-  if posts.code == 200
+  fb = Feedbin::API.new(session[:email], session[:password])
+  response = fb.mark_as_read(params[:id])
+  if response.code == 200
     redirect '/'
   else
     "#{posts.code}! Please try again."
