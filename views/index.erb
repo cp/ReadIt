@@ -1,4 +1,4 @@
-<% if @posts[0] %>
+<% unless @posts.empty? %>
 	<ul>
 	<% @posts.each do |post| %>
 	  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>">Mark as Read</a></li>
@@ -8,6 +8,12 @@
 <% else %>
 <p>You have no unread posts</p>
 <% end %>
+
+<br><b>Subscribe to a feed</b>
+<form method="post" action="/subscribe">
+    URL:<input type="text" name="url" placeholder="http://aley.me" />
+    <input type="submit" value="Subscribe" action="/subscribe" />
+</form>
 
 <br><br>
 <a href="/logout">Log out</a>

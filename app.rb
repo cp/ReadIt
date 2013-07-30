@@ -11,10 +11,10 @@ get '/' do
 end
 
 get '/read/all' do
-  fb = Feedbin::API.new(session[:email], session[:password])
+  @fb = Feedbin::API.new(session[:email], session[:password])
   posts = HTTParty.get("https://api.feedbin.me/v2/entries.json?read=false", basic_auth: { username: session[:email], password: session[:password] })
   to_delete = posts.map { |post| post["id"]}
-  response = fb.mark_as_read(to_delete)
+  response = @fb.mark_as_read(to_delete)
   if response.code == 200
     redirect '/'
   else
@@ -23,17 +23,31 @@ get '/read/all' do
 end
 
 get '/read/:id' do
-  fb = Feedbin::API.new(session[:email], session[:password])
-  response = fb.mark_as_read(params[:id])
+  @fb = Feedbin::API.new(session[:email], session[:password])
+  response = @fb.mark_as_read(params[:id])
   if response.code == 200
     redirect '/'
   else
-    "#{posts.code}! Please try again."
+    "#{response.code}! Please try again."
   end
 end
 
 get '/login' do
   erb :login
+end
+
+post '/subscribe' do
+  @fb = Feedbin::API.new(session[:email], session[:password])
+  response = @fb.subscribe(params[:url])
+  if response.code == 201 || 200
+    redirect '/'
+  elsif response.code == 302
+    "You have already subscribed to this feed."
+  elsif response.code == 300
+    "There are multiple feeds at this URL. We do not support choosing yet."
+  else
+    "#{response.code}! Please try again."
+  end
 end
 
 post '/login' do
