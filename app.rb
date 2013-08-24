@@ -1,34 +1,32 @@
-%w(sinatra feedbin httparty json).each { |x| require x }
+%w(sinatra feedbin json).each { |x| require x }
 
 enable :sessions
 
 get '/' do
-	redirect '/login' if session[:email].nil?
-  auth = { username: session[:email], password: session[:password] }
-  @posts = HTTParty.get("https://api.feedbin.me/v2/entries.json?read=false", basic_auth: auth)
-  redirect '/login' if @posts.code != 200
+  redirect '/login' if session[:email].nil?
+  FB = FeedbinAPI.new(session[:email], session[:password])
+  @posts = FB.entries(read: false)
+  redirect '/login' unless @posts.code == 200
   erb :index
 end
 
 get '/read/all' do
-  @fb = Feedbin::API.new(session[:email], session[:password])
-  posts = HTTParty.get("https://api.feedbin.me/v2/entries.json?read=false", basic_auth: { username: session[:email], password: session[:password] })
-  to_delete = posts.map { |post| post["id"]}
-  response = @fb.mark_as_read(to_delete)
-  if response.code == 200
+  unread = FB.entries(read: false)
+  unread.map! { |post| post["id"]}
+  response = FB.mark_as_read(to_delete)
+  if response == 200
     redirect '/'
   else
-    "#{posts.code}! Please try again."
+    "#{posts}! Please try again."
   end
 end
 
 get '/read/:id' do
-  @fb = Feedbin::API.new(session[:email], session[:password])
-  response = @fb.mark_as_read(params[:id])
-  if response.code == 200
+  response = FB.mark_as_read(params[:id])
+  if response == 200
     redirect '/'
   else
-    "#{response.code}! Please try again."
+    "#{response}! Please try again."
   end
 end
 
@@ -37,29 +35,26 @@ get '/login' do
 end
 
 post '/subscribe' do
-  @fb = Feedbin::API.new(session[:email], session[:password])
-  response = @fb.subscribe(params[:url])
-  if response.code == 201 || 200
+  response = FB.subscribe(params[:url])
+  if response == 201 || 200
     redirect '/'
-  elsif response.code == 302
+  elsif response == 302
     "You have already subscribed to this feed."
-  elsif response.code == 300
+  elsif response == 300
     "There are multiple feeds at this URL. We do not support choosing yet."
   else
-    "#{response.code}! Please try again."
+    "#{response}! Please try again."
   end
 end
 
 post '/login' do
   redirect '/login' if params[:email].nil? || params[:password].nil? 
-  session[:email] = params[:email]
-  session[:password] = params[:password]
+  session[:email], session[:password] = params[:email], params[:password]
   redirect '/'
 end
 
 get '/logout' do
   redirect '/login' if session[:email].nil?
-  session[:email] = nil
-  session[:password] = nil
+  session[:email] = params[:password] = nil, nil
   redirect '/'
 end

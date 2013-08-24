@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'feedbin'
-gem 'httparty'
+gem 'feedbin', "~> 0.0.5"
