@@ -13,11 +13,11 @@ end
 get '/read/all' do
   unread = FB.entries(read: false)
   unread.map! { |post| post["id"]}
-  response = FB.mark_as_read(to_delete)
+  response = FB.mark_as_read(unread)
   if response == 200
     redirect '/'
   else
-    "#{posts}! Please try again."
+    "#{response}! Please try again."
   end
 end
 
