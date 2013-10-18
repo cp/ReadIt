@@ -1,17 +1,18 @@
-<p id="welcome">Welcome, Colby. You currently have <%= @posts.count %> unread posts.</p>
-<% unless @posts.empty? %>
+<h1>ReadIt</h1>
+<p id="welcome">Welcome, Colby. You currently have <%= @entries.count %> unread entries.</p>
+<% unless @entries.empty? %>
 	<ul>
-	<% @posts.each do |post| %>
-	  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>" class="button">Mark as Read</a></li>
+	<% @entries.each do |entry| %>
+	  <li><a href="/entry/<%= entry["id"] %>"><%= entry["title"].to_s %></a> - <a href="/read/<%= entry["id"] %>" class="button">Mark as Read</a></li>
 	<% end %>
 	</ul>
 <a href="/read/all">Mark all as read.</a><br>
 <% else %>
-<p>You have no unread posts</p>
+<p>You have no unread entries</p>
 <% end %>
 
 <br><b>Subscribe to a feed</b>
-<form method="post" action="/subscribe">
+<form method="entry" action="/subscribe">
     URL:<input type="text" name="url" placeholder="http://aley.me" />
     <input type="submit" value="Subscribe" action="/subscribe" />
 </form>

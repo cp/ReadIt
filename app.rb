@@ -5,9 +5,16 @@ enable :sessions
 get '/' do
   redirect '/login' if session[:email].nil?
   FB = FeedbinAPI.new(session[:email], session[:password])
-  @posts = FB.entries(read: false)
-  redirect '/login' unless @posts.code == 200
+  @entries = FB.entries(read: false)
+  redirect '/login' unless @entries.code == 200
   erb :index
+end
+
+get '/entry/:id' do
+  redirect '/login' if session[:email].nil?
+  @entry = FB.entry(params[:id])
+  redirect '/login' unless @entry.code == 200
+  erb :entry
 end
 
 get '/read/all' do

@@ -1,0 +1,8 @@
+<h1><%= @entry["title"] %></h1>
+<h3><%= @entry["author"] %></h1>
+
+<div id="content">
+  <%= @entry["content"] %>
+</div>
+
+<a href="/read/<%= @entry["id"] %>" class="button">Mark as Read</a>
