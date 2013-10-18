@@ -1,10 +1,11 @@
+<p id="welcome">Welcome, Colby. You currently have <%= @posts.count %> unread posts.</p>
 <% unless @posts.empty? %>
 	<ul>
 	<% @posts.each do |post| %>
-	  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>">Mark as Read</a></li>
+	  <li><a href="http://mobilizer.instapaper.com/m?u=<%= post["url"] %>" target="_blank"><%= post["title"].to_s %></a> - <a href="/read/<%= post["id"] %>" class="button">Mark as Read</a></li>
 	<% end %>
 	</ul>
-<a href="/read/all">MARK ALL AS READ!!</a><br>
+<a href="/read/all">Mark all as read.</a><br>
 <% else %>
 <p>You have no unread posts</p>
 <% end %>

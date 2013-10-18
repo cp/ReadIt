@@ -14,20 +14,12 @@ get '/read/all' do
   unread = FB.entries(read: false)
   unread.map! { |post| post["id"]}
   response = FB.mark_as_read(unread)
-  if response == 200
-    redirect '/'
-  else
-    "#{response}! Please try again."
-  end
+  response == 200 ? redirect('/') : "#{response}! Please try again."
 end
 
 get '/read/:id' do
   response = FB.mark_as_read(params[:id])
-  if response == 200
-    redirect '/'
-  else
-    "#{response}! Please try again."
-  end
+  response == 200 ? redirect('/') : "#{response}! Please try again."
 end
 
 get '/login' do
@@ -38,7 +30,7 @@ post '/subscribe' do
   response = FB.subscribe(params[:url])
   if response == 201 || 200
     redirect '/'
-  elsif response == 302
+  response == 302
     "You have already subscribed to this feed."
   elsif response == 300
     "There are multiple feeds at this URL. We do not support choosing yet."
