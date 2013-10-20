@@ -11,11 +11,16 @@
 <p>You have no unread entries</p>
 <% end %>
 
-<br><b>Subscribe to a feed</b>
-<form method="entry" action="/subscribe">
-    URL:<input type="text" name="url" placeholder="http://aley.me" />
-    <input type="submit" value="Subscribe" action="/subscribe" />
-</form>
+<br>
+
+<div id="subscribe">
+  <span>Subscribe to a feed.</span>
+
+  <form method="entry" action="/subscribe">
+      <input type="text" name="url" placeholder="http://aley.me" />
+      <input type="submit" value="Subscribe" action="/subscribe" />
+  </form>
+</div>
 
 <br><br>
 <a href="/logout">Log out</a>
