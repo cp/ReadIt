@@ -16,6 +16,8 @@ class Readit < Sinatra::Application
   get '/' do
     redirect '/login' if session[:email].nil?
     @entries = feedbin.entries(read: false)
+    entry_count = @entries.count
+    @count = entry_count == 0 ? "no" : entry_count
     redirect '/login' unless @entries.code == 200
     erb :index
   end

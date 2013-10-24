@@ -1,5 +1,4 @@
-<h1>ReadIt</h1>
-<p id="welcome">Welcome, Colby. You currently have <%= @entries.count %> unread entries.</p>
+<p id="welcome"><script>document.write(greeting('Colby',"<%= @count %>")); </script></p>
 <% unless @entries.empty? %>
 	<ul>
 	<% @entries.each do |entry| %>
