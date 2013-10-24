@@ -39,6 +39,11 @@ function markRead(id) {
     success: function() {
       decreaseGreeting()
       element.style.display='none';
+    },
+    error: function(error) {
+      element.className = "";
+      alert('There was an error. Please try again later.');
+      console.log(error);
     }
   });
 }
