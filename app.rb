@@ -15,7 +15,7 @@ class Readit < Sinatra::Application
 
   get '/' do
     redirect '/login' if session[:email].nil?
-    @entries = feedbin.entries(read: false)
+    @entries = feedbin.entries(read: false, per_page: 5000)
     entry_count = @entries.count
     @count = entry_count == 0 ? "no" : entry_count
     redirect '/login' unless @entries.code == 200
@@ -33,6 +33,11 @@ class Readit < Sinatra::Application
     unread = feedbin.entries(read: false)
     unread.map! { |post| post["id"]}
     response = feedbin.mark_as_read(unread)
+    response == 200 ? redirect('/') : "#{response}! Please try again."
+  end
+
+  get '/read/:id' do
+    response = feedbin.mark_as_read(params[:id])
     response == 200 ? redirect('/') : "#{response}! Please try again."
   end
 
