@@ -43,6 +43,10 @@ ul li {
   margin-top: 20px;
 }
 
+a#mark_read {
+  cursor: pointer;
+}
+
 .button {
   background-color: #D8D8D8;
   padding: 2px 10px 2px 10px;

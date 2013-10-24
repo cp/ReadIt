@@ -36,9 +36,8 @@ class Readit < Sinatra::Application
     response == 200 ? redirect('/') : "#{response}! Please try again."
   end
 
-  get '/read/:id' do
-    response = feedbin.mark_as_read(params[:id])
-    response == 200 ? redirect('/') : "#{response}! Please try again."
+  post '/read/:id' do
+    feedbin.mark_as_read(params[:id])
   end
 
   get '/login' do

@@ -2,7 +2,7 @@
 <% unless @entries.empty? %>
 	<ul>
 	<% @entries.each do |entry| %>
-	  <li><a href="/entry/<%= entry["id"] %>"><%= entry["title"].to_s %></a> - <a href="/read/<%= entry["id"] %>" class="button">Mark as Read</a></li>
+	  <li id="<%= entry["id"] %>"><a href="/entry/<%= entry["id"] %>"><%= entry["title"].to_s %></a> - <a id="mark_read" onclick="markRead(<%= entry["id"] %>);" class="button">Mark as Read</a></li>
 	<% end %>
 	</ul>
 <a href="/read/all">Mark all as read.</a><br>
